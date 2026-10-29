@@ -81,9 +81,9 @@ public:
     low_token_types type;
     std::string data;
 };
+
 class low_statement_in : public low_statement {
 public:
-    std::string iden_to_return;
 };
 
 class low_function {

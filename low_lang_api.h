@@ -63,7 +63,7 @@ public:
     std::function<void(std::vector< std::unique_ptr<mem_plot>*> inputs)> func;
 };
 void index_function_wrap(low_function_binded bind,std::string callname);
-class low_struct_patern{
+class low_struct_class{
 public:
     std::string iden;
     mem_plot_type type;
@@ -72,7 +72,7 @@ public:
 class low_struc_template {
 public:
     std::string structtypename;
-    std::vector<low_struct_patern> patern ;
+    std::vector<low_struct_class> patern ;
 };
 void Index_Struct(low_struc_template &tem);
 

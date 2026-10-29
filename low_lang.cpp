@@ -238,9 +238,9 @@ void Tokenizer(std::string pro) {
                 chtbuff = outt;
                 chbuff += "#<";
                 i += 2;
-            } else if (pro[i] == '#' && pro[i + 1] == '>') {
+            } else if (pro[i] == '<' && pro[i + 1] == '#') {
                 chtbuff = inpt;
-                chbuff += "#>";
+                chbuff += "<#";
                 i += 2;
             } else if (pro[i] == '=' && pro[i + 1] == '=') {
                 chtbuff = eequalt;
@@ -580,7 +580,7 @@ void Exicute(std::string fn) {
 
             code_flow.push_back(std::to_string(solve_comparison(whilen->dynamiccom)));
 
-            while (solve_comparison(whilen->dynamiccom) != true) {
+            while (solve_comparison(whilen->dynamiccom) == true) {
                 Exicute(whilen->bodyfunc);
             }
 
@@ -620,12 +620,24 @@ void Exicute(std::string fn) {
 
         //in
         if (low_statement_in *inn = dynamic_cast<low_statement_in *>(statement.get())) {
-            mem_plot_string *inp = plot_as_parse_string(low_plot_val(inn->iden_to_return));
-
-            std::string in ;
-            std::cout << "[L] <=";
-            std::cin >> in;
-            inp->value+=in;
+            switch (low_point_val()->get()->type) {
+                case INT: {
+                    std::cin >> plot_as_parse_int(low_point_val())->value;
+                    break;
+                }
+                case FLOAT: {
+                    std::cin >> plot_as_parse_float(low_point_val())->value;
+                    break;
+                }
+                case STRING: {
+                    std::cin >> plot_as_parse_string(low_point_val())->value;
+                    break;
+                }
+                case BOOL: {
+                    std::cin >> plot_as_parse_bool(low_point_val())->value;
+                    break;
+                }
+            }
         }
         //out
         if (low_statement_out *outn = dynamic_cast<low_statement_out *>(statement.get())) {
@@ -661,9 +673,6 @@ void Eval() {
 void Parse() {
     int parsei = 0;
     int pbi = 0;
-    if (parsei > pbi) {
-
-    }
     int rfi = 0;
     std::vector<std::string> rfunc;
     while (parsei < tokens.size()) {
@@ -721,21 +730,25 @@ void Parse() {
             code_flow.push_back("point function " + func);
         }
 
-        //index struct
+        //index struct <> a [a = 0,b = "hi" ]
         if (tokens[parsei].type == structt && tokens[parsei+2].type == bopt) {
             low_struc_template temp;
             if (tokens[parsei+1].type == ident) {
                 temp.structtypename = tokens[++parsei].val;
-                code_flow.push_back("assain struct " + temp.structtypename );
+
                 if (tokens[++parsei].type == bopt) {
                         code_flow.push_back("assain patern " + temp.structtypename );
                     parsei++;
                     while (tokens[parsei].type != bclt) {
                         code_flow.push_back("assain in patern " + tokens[parsei].val);
-                        low_struct_patern pt;
+                        low_struct_class pt;
                         pt.iden = tokens[parsei].val;
-                        pt.type = tokentype_to_plottype(&tokens[++parsei]);
-                        pt.val = tokens[parsei].val;
+                        if (tokens[++parsei].type == eqult) {
+                            pt.type = tokentype_to_plottype(&tokens[++parsei]);
+                            pt.val = tokens[parsei].val;
+                        } else {
+                            low_exit();
+                        }
                         temp.patern.push_back(pt);
                         if (tokens[++parsei].type == andt) {
                             parsei++;
@@ -745,6 +758,7 @@ void Parse() {
                     struct_templates[temp.structtypename] = temp;
                 }
             }
+
         }
 
         //if func
@@ -821,11 +835,11 @@ void Parse() {
                 low_exit();
             }
         }
-        if (tokens[parsei].type == inpt) {
 
+        //in
+        if (tokens[parsei].type == inpt) {
             low_statement_in stin;
 
-            stin.iden_to_return = tokens[++parsei].val;
 
             if (tokens[++parsei].type == eolt) {
                 function->statements.push_back(std::make_unique<low_statement_in>(stin));

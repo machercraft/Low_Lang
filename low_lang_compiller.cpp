@@ -7,26 +7,36 @@
 #include <fstream>
 
 void Compiler (std::string prof,platform plat) {
-
-    std::ifstream program_file(prof+"/main.l");
-
     std::string pro;
+    std::cout <<"[Compilling] " << prof << std::endl;
+    auto dr = std::filesystem::directory_iterator(prof);
+    for (auto & script: dr) {
 
-    while (!program_file.eof()) {
-        std::string cline;
+        if (script.path().extension().string() == ".l") {
+            std::cout << "["<<script.path().string()<<"]"<<std::endl;
 
-        std::getline(program_file,cline);
+            std::ifstream program_file(script.path().string());
 
-        for (int i = 0; i < cline.size(); ++i) {
-            pro += cline[i];
+            while (!program_file.eof()) {
+                std::string cline;
 
-            if (cline[i+1] == '"') {
-                pro += "\\";
+                std::getline(program_file,cline);
+
+                for (int i = 0; i < cline.size(); ++i) {
+                    pro += cline[i];
+
+                    if (cline[i+1] == '"') {
+                        pro += "\\";
+                    }
+                }
             }
+
+            program_file.close();
         }
+
     }
 
-    program_file.close();
+
 
     // ./low_lang "path to .l file" "path to export"
     if (!exists(std::filesystem::path(prof+"/compile"))) {

@@ -12,8 +12,10 @@
 #include "low_lang_compiller.h"
 
 //<> vec2 [ x 0.0 , y 0.0] $ @ main [<< v -> vec2 [2.5,0.0] ;  << a 3.0; @a / 2.0  #< a ; @ <> v -> x + 2.5 ] #?
+// binded function
 
 int main(int argc, char ** argv) {
+
     std::string p ="";
 
     if (argv[1] != nullptr)
@@ -82,16 +84,3 @@ int main(int argc, char ** argv) {
     }
 }
 
-// binded function
-// low_function_binded bind;
-// bind.func = [](std::vector<std::unique_ptr<mem_plot> *> inputs) {
-//     int ii = plot_as_parse_int(inputs[0])->value;
-//     std::string m = plot_as_parse_string(inputs[1])->value;
-//     for (int i = 0; i < ii; ++i) {
-//         std::cout << m << " "<<i<<std::endl;
-//         plot_as_parse_int(inputs[0])->value = i;
-//     }
-// };
-//
-// //index bind
-// index_function_wrap(bind,"count");

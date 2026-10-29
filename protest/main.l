@@ -1,22 +1,17 @@
-$ a [
+// Example //
 
-<< A 0;
-
-<< b false ;
-<< C " ";
-
-@b
-
-~  == true -> [
-
-#< "Welcome to low !!";
-@C #>C;
-#< @;
-]
-
-]
 $ @ main [
-$a;
+<< input 0.0;
+<< op "hi";
+<< buff 0.0;
+<< close false;
+
+ <> a
+ [
+ a = 0,
+ b = "hi"
+ ]
+
 ]
 
 #?
